@@ -50,6 +50,8 @@ public class VideoPlay extends ActionBarActivity implements
     private Runnable volumeSeebarRunnable = null;
     Handler mHandler = null;
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,27 @@ public class VideoPlay extends ActionBarActivity implements
                 volumeSeekbar.setVisibility(View.GONE);
             }
         };
+
+        //Swipe to adjust volume
+        videoView.setOnTouchListener(new OnSwipeTouchListener(VideoPlay.this)
+        {
+            //adjust audio
+            @Override
+            public void onSwipeTop() {
+                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
+            }
+            //adjust audio
+            @Override
+            public void onSwipeBottom() {
+                audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
+                        AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
+            }
+            public boolean onTouch(View v, MotionEvent event) {
+                mediaController.show();
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
 
