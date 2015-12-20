@@ -4,8 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools" tools:context=".VideoList">
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
+        android:id="@+id/action_stream"
+        android:title="@string/action_Stream"
         android:orderInCategory="100"
         app:showAsAction="never" />
 

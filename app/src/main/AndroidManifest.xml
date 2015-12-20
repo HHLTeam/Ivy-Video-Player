@@ -30,6 +30,13 @@
             android:theme="@style/Theme.AppCompat.Light.NoActionBar">
 
         </activity>
+        <activity
+            android:name=".PlayVideo"
+            android:label="@string/stream_activity"
+            android:configChanges="orientation|screenSize"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+
+        </activity>
     </application>
 
 </manifest>

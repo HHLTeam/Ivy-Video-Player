@@ -53,6 +53,31 @@ public class VideoList extends AppCompatActivity {
 
     private static final String TAG = VideoList.class.getSimpleName();
     SwipeRefreshLayout swipeRefreshLayout;
+    private AlertDialog.Builder alertStreaming;
+
+    public Editable getYouEditTextValue() {
+        return YouEditTextValue;
+    }
+
+    public void setYouEditTextValue(Editable youEditTextValue) {
+        YouEditTextValue = youEditTextValue;
+    }
+
+    private static Editable YouEditTextValue;
+
+
+
+
+    private EditText editTextStream;
+
+    public void setEditTextStream(EditText editTextStream) {
+        this.editTextStream = editTextStream;
+    }
+
+    public EditText getEditTextStream() {
+        return editTextStream;
+    }
+
 
 
     @Override
@@ -118,6 +143,37 @@ public class VideoList extends AppCompatActivity {
             }
         });
 
+        //Streaming Video from URL ...
+        alertStreaming = new AlertDialog.Builder(this);          //Tao dialog Streaming
+
+        editTextStream = new EditText(VideoList.this);
+        alertStreaming.setMessage("Stream to URL: ");
+        alertStreaming.setTitle("Streaming Video");
+
+        alertStreaming.setView(editTextStream);
+
+        alertStreaming.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //What ever you want to do with the value
+                YouEditTextValue = editTextStream.getText();
+                setYouEditTextValue(YouEditTextValue);
+
+                //setEditTextStream(editTextStream);
+                //getEditTextStream();
+
+                Intent intent = new Intent(VideoList.this, PlayVideo.class);        //Lien lac giua Video List va PlayVideo
+                startActivity(intent);
+
+            }
+        });
+
+        alertStreaming.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                // what ever you want to do with No option.
+                dialog.cancel();
+            }
+        });
+
     }
 
     @Override
@@ -174,6 +230,9 @@ public class VideoList extends AppCompatActivity {
                 return true;
             case R.id.open_search:
                 showSearchBox();
+                return true;
+            case R.id.action_stream:
+                alertStreaming.show();
                 return true;
         }
 
