@@ -11,5 +11,7 @@
     <string name="action_about">About</string>
     <string name="search_box_hint">Search video...</string>
     <string name="stream_activity">Streaming Video</string>
+    <string name="menu_share">Share</string>
+    <string name="menu_delete">Delete</string>
 
 </resources>

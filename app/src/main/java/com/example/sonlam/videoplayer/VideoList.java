@@ -5,6 +5,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -121,6 +122,9 @@ public class VideoList extends AppCompatActivity {
                 jumpToVideoPlay(videoInfos.get(i).getUrl());
             }
         });
+
+
+        registerForContextMenu(videoList);                       //Dang ki right click
 
 
 
@@ -303,5 +307,31 @@ public class VideoList extends AppCompatActivity {
         }
     }
 
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {       //onCreate Context Menu (right click)
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        if (v.getId()== R.id.videoList) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_right_click, menu);
+        }
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+        switch(item.getItemId()) {
+            case R.id.share:
+                // add stuff here
+                return true;
+            case R.id.delete:
+                // remove stuff here
+                return true;
+            default:
+                return super.onContextItemSelected(item);
+        }
+    }
 
 }
