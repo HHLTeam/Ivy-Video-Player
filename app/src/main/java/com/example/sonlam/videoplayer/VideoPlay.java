@@ -3,20 +3,31 @@ package com.example.sonlam.videoplayer;
 /**
  * Created by Son Lam on 12/18/2015.
  */
+
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.PowerManager;
+import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
@@ -26,9 +37,12 @@ import java.io.IOException;
 import java.util.logging.Handler;
 
 import com.example.sonlam.videoplayer.R;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 
-public class VideoPlay extends ActionBarActivity implements
+public class VideoPlay extends AppCompatActivity implements
         MediaPlayer.OnBufferingUpdateListener,
         MediaPlayer.OnCompletionListener,
         MediaPlayer.OnErrorListener,
@@ -39,37 +53,32 @@ public class VideoPlay extends ActionBarActivity implements
         SurfaceHolder.Callback,
         MediaController.MediaPlayerControl {
     private MediaPlayer mediaPlayer = null;
-    private String videoUri = null;
+    private String videoUri = null; //url media file
     private SurfaceView videoView = null;
     private SurfaceHolder videoHolder = null;
     private String DEBUG = "video play";
     private MediaController mediaController = null;
-
     private SeekBar volumeSeekbar = null;
-    private AudioManager audioManager = null;
+    private AudioManager audioManager = null; //manager audio
     private Runnable volumeSeebarRunnable = null;
     Handler mHandler = null;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
-        //supportRequestWindowFeature(Window.FEATURE_NO_TITLE);        //Loai bo thanh menu
-        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
-
         setContentView(R.layout.video_play);
 
+        //fullscreen
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //set screen on
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
-        videoView = (SurfaceView)findViewById(R.id.videoSurface);
-
-        volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekbar);
-        volumeSeekbar.setVisibility(View.GONE);                           //Hide volume Seekbar
-
+        videoView = (SurfaceView) findViewById(R.id.videoSurface);
+        volumeSeekbar = (SeekBar) findViewById(R.id.volumeSeekbar);
+        //Hide volume Seekbar
+        volumeSeekbar.setVisibility(View.GONE);
         videoHolder = videoView.getHolder();
         videoHolder.addCallback(this);
         mediaController = new MediaController(this);
@@ -82,8 +91,6 @@ public class VideoPlay extends ActionBarActivity implements
             finish();
         }
 
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
         volumeSeebarRunnable = new Runnable() {
             @Override
             public void run() {
@@ -92,21 +99,47 @@ public class VideoPlay extends ActionBarActivity implements
             }
         };
 
+    //Notification
+        Intent notificationIntent = new Intent(this, VideoPlay.class);
+        NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        // prepare intent which is triggered if the
+        // notification is selected
+        // use System.currentTimeMillis() to have a unique ID for the pending intent
+        Intent resultIntent = new Intent(this, VideoList.class);
+        // Because clicking the notification opens a new ("special") activity, there's
+        // no need to create an artificial back stack.
+        PendingIntent resultPendingIntent =
+                PendingIntent.getActivity(
+                        this,
+                        0,
+                        resultIntent,
+                        PendingIntent.FLAG_UPDATE_CURRENT
+                );
+        Notification n = new Notification.Builder(this)
+                .setContentTitle("Ivy Player")
+                .setContentText("Playing " + videoUri.substring(videoUri.lastIndexOf('/') + 1, videoUri.length()))
+                .setSmallIcon(R.mipmap.ic_launcher_noti)
+                .setContentIntent(resultPendingIntent)
+                .setAutoCancel(true).build();
+        nm.cancelAll();
+        nm.notify(0, n);
+
         //Swipe to adjust volume
-        videoView.setOnTouchListener(new OnSwipeTouchListener(VideoPlay.this)
-        {
+        videoView.setOnTouchListener(new OnSwipeTouchListener(VideoPlay.this) {
             //adjust audio
             @Override
             public void onSwipeTop() {
                 audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                         AudioManager.ADJUST_RAISE, AudioManager.FLAG_SHOW_UI);
             }
+
             //adjust audio
             @Override
             public void onSwipeBottom() {
                 audioManager.adjustStreamVolume(AudioManager.STREAM_MUSIC,
                         AudioManager.ADJUST_LOWER, AudioManager.FLAG_SHOW_UI);
             }
+
             public boolean onTouch(View v, MotionEvent event) {
                 mediaController.show();
                 return gestureDetector.onTouchEvent(event);
@@ -153,6 +186,7 @@ public class VideoPlay extends ActionBarActivity implements
         mediaPlayer.setOnSeekCompleteListener(this);
         mediaPlayer.setOnVideoSizeChangedListener(this);
     }
+
     private void setVideoSize() {                       //set Video size
 
         // // Get the dimensions of the video
@@ -166,7 +200,7 @@ public class VideoPlay extends ActionBarActivity implements
         float screenProportion = (float) screenWidth / (float) screenHeight;
 
         // Get the SurfaceView layout parameters
-        android.view.ViewGroup.LayoutParams lp = videoView.getLayoutParams();
+        ViewGroup.LayoutParams lp = videoView.getLayoutParams();
         if (videoProportion > screenProportion) {
             lp.width = screenWidth;
             lp.height = (int) ((float) screenWidth / videoProportion);
@@ -179,11 +213,11 @@ public class VideoPlay extends ActionBarActivity implements
         mediaPlayer.start();
     }
 
-    private void initControls()             //Khoi tao volume seekbar control
-    {
-        try{
-            volumeSeekbar = (SeekBar)findViewById(R.id.volumeSeekbar);
-            audioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+    //Khoi tao volume seekbar control
+    private void initControls() {
+        try {
+            volumeSeekbar = (SeekBar) findViewById(R.id.volumeSeekbar);
+            audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
             volumeSeekbar.setMax(audioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC));
             volumeSeekbar.setProgress(audioManager.getStreamVolume(AudioManager.STREAM_MUSIC));
 
@@ -203,8 +237,7 @@ public class VideoPlay extends ActionBarActivity implements
 
                 }
             });
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -275,16 +308,13 @@ public class VideoPlay extends ActionBarActivity implements
 
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mediaPlayer.release();
-        mediaPlayer = null;
-    }
+
 
     @Override
     public void start() {
         mediaPlayer.start();
+        //get screen on
+
     }
 
     @Override
@@ -349,4 +379,6 @@ public class VideoPlay extends ActionBarActivity implements
         initControls();
         return super.onTouchEvent(event);
     }
+
+
 }
