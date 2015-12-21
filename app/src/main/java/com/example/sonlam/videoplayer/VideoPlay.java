@@ -36,10 +36,7 @@ import android.widget.SeekBar;
 import java.io.IOException;
 import java.util.logging.Handler;
 
-import com.example.sonlam.videoplayer.R;
-import com.google.android.gms.appindexing.Action;
-import com.google.android.gms.appindexing.AppIndex;
-import com.google.android.gms.common.api.GoogleApiClient;
+
 
 
 public class VideoPlay extends AppCompatActivity implements

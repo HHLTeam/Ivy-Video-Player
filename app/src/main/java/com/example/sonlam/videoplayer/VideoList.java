@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Dialog;
@@ -47,6 +48,7 @@ import android.widget.Filterable;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 public class VideoList extends AppCompatActivity {
@@ -98,7 +100,7 @@ public class VideoList extends AppCompatActivity {
         });
 
         videoResolver= this.getContentResolver();
-        Cursor videoCursor;
+        final Cursor videoCursor;
         videoResolver=getContentResolver();
         videoInfos = new ArrayList<Video_Info>();
         videoCursor = videoResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColums, null, null, null);
@@ -175,6 +177,22 @@ public class VideoList extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int whichButton) {
                 // what ever you want to do with No option.
                 dialog.cancel();
+            }
+        });
+        videoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
+            {
+                                File file = new File(     videoInfos.get(position).getUrl());
+                                boolean deleted = file.delete() ;
+                                if(deleted)
+                                {
+                                    mAdapter.remove(mAdapter.getItem(position));
+                                    Toast.makeText(VideoList.this, "Tành công", Toast.LENGTH_SHORT).show();
+                                }
+
+
+                return false;
             }
         });
 
