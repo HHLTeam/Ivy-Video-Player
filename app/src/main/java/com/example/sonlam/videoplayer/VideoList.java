@@ -183,13 +183,16 @@ public class VideoList extends AppCompatActivity {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id)
             {
-                                File file = new File(     videoInfos.get(position).getUrl());
-                                boolean deleted = file.delete() ;
-                                if(deleted)
-                                {
-                                    mAdapter.remove(mAdapter.getItem(position));
-                                    Toast.makeText(VideoList.this, "Tành công", Toast.LENGTH_SHORT).show();
-                                }
+                //File file = new File("/storage/external_SD/New Folder/Hai huoc nhat qua dat.mp4");
+                File file = new File(videoInfos.get(position).getUrl());
+                boolean deleted = file.delete();
+                //getContentResolver().delete(Uri.parse(videoInfos.get(position).getUrl()), null, null);
+                if(deleted)
+                {
+                    mAdapter.remove(mAdapter.getItem(position));
+                    mAdapter.notifyDataSetChanged();
+                    Toast.makeText(VideoList.this, "Thành công", Toast.LENGTH_SHORT).show();
+                }
 
 
                 return false;
@@ -197,6 +200,8 @@ public class VideoList extends AppCompatActivity {
         });
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -255,6 +260,9 @@ public class VideoList extends AppCompatActivity {
                 return true;
             case R.id.action_stream:
                 alertStreaming.show();
+                return true;
+            case R.id.refresh:
+                videoList.invalidateViews();
                 return true;
         }
 
@@ -326,7 +334,7 @@ public class VideoList extends AppCompatActivity {
     }
 
 
-    @Override
+    /*@Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {       //onCreate Context Menu (right click)
         super.onCreateContextMenu(menu, v, menuInfo);
 
@@ -350,6 +358,6 @@ public class VideoList extends AppCompatActivity {
             default:
                 return super.onContextItemSelected(item);
         }
-    }
+    }*/
 
 }

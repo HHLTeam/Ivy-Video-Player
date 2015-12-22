@@ -59,6 +59,7 @@ public class VideoPlay extends AppCompatActivity implements
     private AudioManager audioManager = null; //manager audio
     private Runnable volumeSeebarRunnable = null;
     Handler mHandler = null;
+    private boolean isPaused = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,8 +292,23 @@ public class VideoPlay extends AppCompatActivity implements
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        mediaPlayer.prepareAsync();
-        mediaPlayer.setDisplay(videoHolder);
+
+        try {
+            if (isPaused) {
+                mediaPlayer.start();
+                isPaused = false;
+            }
+            else
+                
+                mediaPlayer.prepare();
+                //mediaPlayer.prepareAsync();
+                mediaPlayer.setDisplay(videoHolder);
+        }catch (IOException i){
+            mediaPlayer.prepareAsync();
+            mediaPlayer.setDisplay(videoHolder);
+        }
+        //mediaPlayer.prepareAsync();
+        //mediaPlayer.setDisplay(videoHolder);
     }
 
     @Override
@@ -377,5 +393,12 @@ public class VideoPlay extends AppCompatActivity implements
         return super.onTouchEvent(event);
     }
 
-
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            isPaused = true;
+        }
+    }
 }
