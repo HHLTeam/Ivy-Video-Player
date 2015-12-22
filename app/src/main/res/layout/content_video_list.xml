@@ -27,10 +27,9 @@
         android:id="@+id/edit_text_search_listview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
         android:hint="@string/search_box_hint"
         android:visibility="invisible"
-        android:background="#565353" />
+        android:background="#C8E6C9" />
 
 
 

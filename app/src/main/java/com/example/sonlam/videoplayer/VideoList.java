@@ -1,17 +1,20 @@
 package com.example.sonlam.videoplayer;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.ContextMenu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-
+import java.util.Random;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-
 import android.app.Dialog;
 import android.support.v4.app.DialogFragment;
 import android.view.MenuInflater;
@@ -44,9 +47,13 @@ import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+
 
 
 public class VideoList extends AppCompatActivity {
@@ -65,10 +72,6 @@ public class VideoList extends AppCompatActivity {
     }
 
     private static Editable YouEditTextValue;
-
-
-
-
     private EditText editTextStream;
 
     public void setEditTextStream(EditText editTextStream) {
@@ -79,27 +82,37 @@ public class VideoList extends AppCompatActivity {
         return editTextStream;
     }
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_list);
         /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);*/
-
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                VideoPlay vl=new VideoPlay();
+                if(vl.get_filePath()==null){
+                    int random = (int) (Math.random() * (videoList.getCount()+1));
+                    jumpToVideoPlay(videoInfos.get(random).getUrl());
+                }
+                else
+                {
+                    jumpToVideoPlay(vl.get_filePath());
+                }
+
+
+
+
             }
         });
 
-        videoResolver= this.getContentResolver();
-        Cursor videoCursor;
-        videoResolver=getContentResolver();
+
+        videoResolver = this.getContentResolver();
+        final Cursor videoCursor;
+        videoResolver = getContentResolver();
         videoInfos = new ArrayList<Video_Info>();
         videoCursor = videoResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColums, null, null, null);
         if (videoCursor.moveToFirst()) {
@@ -110,11 +123,11 @@ public class VideoList extends AppCompatActivity {
                 videoInfo.setUrl(videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media.DATA)));
                 videoInfo.setMimeType(videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE)));
                 videoInfos.add(videoInfo);
-            }while (videoCursor.moveToNext());
+            } while (videoCursor.moveToNext());
         }
 
-        videoList=(ListView)findViewById(R.id.videoList);
-        mAdapter = new Video_Adapter(this,videoInfos);
+        videoList = (ListView) findViewById(R.id.videoList);
+        mAdapter = new Video_Adapter(this, videoInfos);
         videoList.setAdapter(mAdapter);
         videoList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -124,15 +137,22 @@ public class VideoList extends AppCompatActivity {
         });
 
 
-        registerForContextMenu(videoList);                       //Dang ki right click
+        registerForContextMenu(videoList); //Dang ki right click
 
 
-
-        txtsearch = (EditText)findViewById(R.id.edit_text_search_listview);
+        videoList.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP && event.getAction() == MotionEvent.ACTION_DOWN) {
+                    txtsearch.setVisibility(View.INVISIBLE);
+                }
+                return false;
+            }
+        });
+        txtsearch = (EditText) findViewById(R.id.edit_text_search_listview);
         txtsearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
@@ -178,7 +198,26 @@ public class VideoList extends AppCompatActivity {
             }
         });
 
+        videoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                File file = new File(videoInfos.get(position).getUrl());
+                file.delete();
+                boolean deleted = file.delete();
+                if (file.exists() == false && deleted == true) {
+                    mAdapter.remove(mAdapter.getItem(position));
+                    Toast.makeText(VideoList.this, "Tành công", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(VideoList.this, "Không thành công", Toast.LENGTH_SHORT).show();
+
+
+                return false;
+            }
+        });
+
+
     }
+
 
     @Override
     public void onBackPressed() {
@@ -192,7 +231,6 @@ public class VideoList extends AppCompatActivity {
                     }
                 }).setNegativeButton("No", null).show();
     }
-
 
 
     @Override
@@ -243,13 +281,11 @@ public class VideoList extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void showSearchBox()
-    {
-        EditText edTx1=(EditText)findViewById(R.id.edit_text_search_listview);
-        if(edTx1.getVisibility ()== View.INVISIBLE)
+    public void showSearchBox() {
+        EditText edTx1 = (EditText) findViewById(R.id.edit_text_search_listview);
+        if (edTx1.getVisibility() == View.INVISIBLE)
             edTx1.setVisibility(View.VISIBLE);
-        else
-        if(edTx1.getVisibility()==View.VISIBLE)
+        else if (edTx1.getVisibility() == View.VISIBLE)
             edTx1.setVisibility(View.INVISIBLE);
     }
 
@@ -257,6 +293,9 @@ public class VideoList extends AppCompatActivity {
         DialogFragment newFragment = new InfoDialogFragment();
         newFragment.show(getSupportFragmentManager(), "Info");
     }
+
+
+
 
 
     static public class InfoDialogFragment extends DialogFragment {
@@ -290,9 +329,10 @@ public class VideoList extends AppCompatActivity {
             MediaStore.Video.Media.TITLE,
             MediaStore.Video.Media.MIME_TYPE
     };
-    public  void LoadVideoInfo() {
+
+    public void LoadVideoInfo() {
         Cursor videoCursor;
-        videoResolver=getContentResolver();
+        videoResolver = getContentResolver();
         videoInfos = new ArrayList<Video_Info>();
         videoCursor = videoResolver.query(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, videoColums, null, null, null);
         if (videoCursor.moveToFirst()) {
@@ -303,16 +343,17 @@ public class VideoList extends AppCompatActivity {
                 videoInfo.setUrl(videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media.DATA)));
                 videoInfo.setMimeType(videoCursor.getString(videoCursor.getColumnIndex(MediaStore.Video.Media.MIME_TYPE)));
                 videoInfos.add(videoInfo);
-            }while (videoCursor.moveToNext());
+            } while (videoCursor.moveToNext());
         }
     }
 
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {       //onCreate Context Menu (right click)
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        //onCreate Context Menu (right click)
         super.onCreateContextMenu(menu, v, menuInfo);
 
-        if (v.getId()== R.id.videoList) {
+        if (v.getId() == R.id.videoList) {
             MenuInflater inflater = getMenuInflater();
             inflater.inflate(R.menu.menu_right_click, menu);
         }
@@ -322,7 +363,7 @@ public class VideoList extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
-        switch(item.getItemId()) {
+        switch (item.getItemId()) {
             case R.id.share:
                 // add stuff here
                 return true;
@@ -333,5 +374,4 @@ public class VideoList extends AppCompatActivity {
                 return super.onContextItemSelected(item);
         }
     }
-
 }
