@@ -61,9 +61,7 @@ public class VideoPlay extends AppCompatActivity implements
     private AudioManager audioManager = null; //manager audio
     private Runnable volumeSeebarRunnable = null;
     Handler mHandler = null;
-<<<<<<< HEAD
-    private boolean isPaused = false;
-=======
+
     private boolean isPaused;
     private static String _filePath;
     public static String get_filePath() {
@@ -79,7 +77,7 @@ public class VideoPlay extends AppCompatActivity implements
     public static void set_seekTime(int _seekTime) {
         VideoPlay._seekTime = _seekTime;
     }
->>>>>>> origin/master
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -323,44 +321,28 @@ public class VideoPlay extends AppCompatActivity implements
     }
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/master
         try {
             if (isPaused) {
                 mediaPlayer.start();
                 isPaused = false;
             }
             else
-<<<<<<< HEAD
-                
                 mediaPlayer.prepare();
                 //mediaPlayer.prepareAsync();
-                mediaPlayer.setDisplay(videoHolder);
-=======
-                mediaPlayer.prepare();
-            //mediaPlayer.prepareAsync();
             mediaPlayer.setDisplay(videoHolder);
->>>>>>> origin/master
+                //mediaPlayer.prepareAsync();
         }catch (IOException i){
-            mediaPlayer.prepareAsync();
-            mediaPlayer.setDisplay(videoHolder);
+
+                mediaPlayer.prepareAsync();
+                mediaPlayer.setDisplay(videoHolder);
+
         }
         //mediaPlayer.prepareAsync();
         //mediaPlayer.setDisplay(videoHolder);
-<<<<<<< HEAD
-=======
+
     }
-    @Override
-    protected void onPause() {
-        super.onPause();
-        if (mediaPlayer.isPlaying()) {
-            mediaPlayer.pause();
-            isPaused = true;
-        }
->>>>>>> origin/master
-    }
+
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
     }
@@ -423,7 +405,7 @@ public class VideoPlay extends AppCompatActivity implements
         initControls();
         return super.onTouchEvent(event);
     }
-<<<<<<< HEAD
+
 
     @Override
     protected void onPause() {
@@ -433,6 +415,4 @@ public class VideoPlay extends AppCompatActivity implements
             isPaused = true;
         }
     }
-=======
->>>>>>> origin/master
 }

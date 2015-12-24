@@ -1,6 +1,7 @@
 package com.example.sonlam.videoplayer;
 
 import android.graphics.Bitmap;
+import android.net.Uri;
 
 /**
  * Created by Son Lam on 12/18/2015.
@@ -21,6 +22,16 @@ public class Video_Info {
     private Bitmap bitmap;
     private String title;
     private String url;
+
+    public Uri getUri() {
+        return uri;
+    }
+
+    public void setUri(Uri uri) {
+        this.uri = uri;
+    }
+
+    private Uri uri;
 
     public String getMimeType() {
         return mimeType;

@@ -13,5 +13,11 @@
     <string name="stream_activity">Streaming Video</string>
     <string name="menu_share">Share</string>
     <string name="menu_delete">Delete</string>
+    <string name="btn_anh_mo_ta">Chọn ảnh mô tả</string>
+    <string name="btn_chon_video">Chọn Video</string>
+    <string name="btn_uploadVideo">Upload</string>
+    <string name="editTxt_TenVideo">Nhap ten video...</string>
+    <string name="editTxt_MoTa">Nhap mo ta cho video...</string>
+    <string name="two_fragment">Fragment 2</string>
 
 </resources>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:id="@+id/imageView_VideoOnline"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:scaleType="centerCrop"/>
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:id="@+id/editTxt_VideoTitle"
+        android:layout_above="@+id/editTxt_User"
+        android:layout_toRightOf="@+id/imageView_VideoOnline"
+        android:layout_toEndOf="@+id/imageView_VideoOnline"
+        android:textIsSelectable="false"
+        android:textSize="@dimen/abc_action_bar_content_inset_material"
+        android:layout_alignParentTop="true" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="33dp"
+        android:id="@+id/editTxt_User"
+        android:layout_above="@+id/ratingBar"
+        android:layout_toRightOf="@+id/imageView_VideoOnline"
+        android:layout_toEndOf="@+id/imageView_VideoOnline"
+        android:textSize="@dimen/abc_action_bar_overflow_padding_end_material" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/ratingBar"
+        android:layout_alignBottom="@+id/imageView_VideoOnline"
+        android:layout_toRightOf="@+id/imageView_VideoOnline"
+        android:layout_toEndOf="@+id/imageView_VideoOnline"
+        style="@android:style/Widget.Holo.RatingBar.Small"/>
+
+</RelativeLayout>
