@@ -19,5 +19,17 @@
     <string name="editTxt_TenVideo">Nhap ten video...</string>
     <string name="editTxt_MoTa">Nhap mo ta cho video...</string>
     <string name="two_fragment">Fragment 2</string>
+    <string name="userCommentOnline">User</string>
+    <string name="commentOnline">Comment...</string>
+    <string name="btn_Xoa">Xóa</string>
+    <string name="btn_GuiBinhLuan">Gửi bình luận</string>
+    <string name="guiBinhLuan_hint">Nhập bình luận...</string>
+    <string name="txtview_VideoTitle">Tên Video: </string>
+    <string name="nguoi_xuat_ban">Người xuất bản: </string>
+    <string name="ngay_xuat_ban">Ngày xuất bản: </string>
+    <string name="danh_gia_chung">Đánh giá chung: </string>
+    <string name="mo_ta">Mô tả: </string>
+    <string name="danh_gia_cua_ban">Bạn đánh giá: </string>
+    <string name="xem">Xem</string>
 
 </resources>

@@ -1,12 +1,9 @@
 package com.example.sonlam.videoplayer;
 
-import com.parse.Parse;
 import com.parse.ParseClassName;
 import com.parse.ParseException;
 import com.parse.ParseFile;
 import com.parse.ParseObject;
-
-import java.security.PublicKey;
 
 
 /**
@@ -60,11 +57,11 @@ public class VideoParseStorage extends ParseObject {
     public void setUser(int luotxem){
         put("View", luotxem );
     }
-    public int getDanhGia(){
-        return getNumber("Rate").intValue();
+    public float getDanhGia(){
+        return getNumber("Rate").floatValue();
     }
 
-    public void setDanhGia(int danhgia){
+    public void setDanhGia(float danhgia){
         put("Rate", danhgia );
     }
 
@@ -80,4 +77,14 @@ public class VideoParseStorage extends ParseObject {
     public void setAnhVideo(ParseFile videoimage){
         put("VideoImage", videoimage);
     }
+
+    public String getDate() {
+        return getString("Date");
+    }
+
+    public void setDate(String date) {
+        put("Date", date );
+    }
+
+
 }

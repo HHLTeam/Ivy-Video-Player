@@ -11,11 +11,8 @@
         android:layout_gravity="bottom|end"
 
         android:src="@mipmap/ic_play_light"
-        android:layout_marginEnd="82dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginRight="82dp"
-        android:layout_marginBottom="87dp" />
+        android:layout_alignParentEnd="true" />
 
 </RelativeLayout>

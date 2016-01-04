@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 
@@ -33,6 +34,9 @@ public class VideoList extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
+       getWindow().setSoftInputMode(                                    //Solve hidden editText caused by keyboard
+               WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
 
          viewPager = (ViewPager)findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -64,8 +68,8 @@ public class VideoList extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new OfflineFragment(), "Your video");
-        adapter.addFragment(new TwoFragment(), "TWO");
-        //adapter.addFragment(new ThreeFragment(), "THREE");
+        adapter.addFragment(new VideoUpLoadFragment(), "Upload");
+        adapter.addFragment(new VideoListFragment(), "O.Video List");
         viewPager.setAdapter(adapter);
     }
 

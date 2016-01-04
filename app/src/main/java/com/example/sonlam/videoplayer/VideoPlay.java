@@ -7,22 +7,14 @@ package com.example.sonlam.videoplayer;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.PowerManager;
-import android.support.v4.app.NotificationBuilderWithBuilderAccessor;
-import android.support.v4.app.NotificationCompat;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,13 +23,12 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.SeekBar;
+
 import java.io.IOException;
 import java.util.logging.Handler;
-import java.util.prefs.PreferenceChangeListener;
 
 public class VideoPlay extends AppCompatActivity implements
         MediaPlayer.OnBufferingUpdateListener,
@@ -178,6 +169,11 @@ public class VideoPlay extends AppCompatActivity implements
 
     }
 
+    private String getVideoUrl() {
+        Intent intent = getIntent();
+        return intent.getStringExtra("Url");
+
+    }
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event)
     {

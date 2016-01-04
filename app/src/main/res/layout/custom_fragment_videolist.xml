@@ -12,25 +12,27 @@
         android:layout_alignParentStart="true"
         android:scaleType="centerCrop"/>
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="33dp"
-        android:id="@+id/editTxt_VideoTitle"
-        android:layout_above="@+id/editTxt_User"
+        android:id="@+id/TxtView_VideoTitle"
+        android:layout_above="@+id/TxtView_Date"
         android:layout_toRightOf="@+id/imageView_VideoOnline"
         android:layout_toEndOf="@+id/imageView_VideoOnline"
         android:textIsSelectable="false"
-        android:textSize="@dimen/abc_action_bar_content_inset_material"
-        android:layout_alignParentTop="true" />
+        android:textSize="20dp"
+        android:layout_alignParentTop="true"
+        android:gravity="center" />
 
-    <EditText
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="33dp"
-        android:id="@+id/editTxt_User"
+        android:id="@+id/TxtView_Date"
         android:layout_above="@+id/ratingBar"
         android:layout_toRightOf="@+id/imageView_VideoOnline"
         android:layout_toEndOf="@+id/imageView_VideoOnline"
-        android:textSize="@dimen/abc_action_bar_overflow_padding_end_material" />
+        android:textSize="14dp"
+        android:gravity="center" />
 
     <RatingBar
         android:layout_width="wrap_content"

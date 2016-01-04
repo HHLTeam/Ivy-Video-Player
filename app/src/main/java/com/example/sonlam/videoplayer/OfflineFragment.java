@@ -1,7 +1,9 @@
 package com.example.sonlam.videoplayer;
 
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -29,6 +31,9 @@ import java.util.ArrayList;
 
 public class OfflineFragment extends Fragment {
     public static ListView videoList = null;
+
+    private EditText editTextDelete;
+    private AlertDialog.Builder alertDelete;
 
     Uri parcialUri = Uri.parse("content://media/external/audio/media");
 
@@ -107,29 +112,40 @@ public class OfflineFragment extends Fragment {
             }
         });
 
-        videoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+/*        videoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
                 File file = new File(videoInfos.get(position).getUrl());
+
                 file.delete();
                 getActivity().getContentResolver().delete(videoInfos.get(position).getUri(), null, null);
                 mAdapter.remove(mAdapter.getItem(position));
                 Toast.makeText(getActivity(), "Thành công", Toast.LENGTH_SHORT).show();
                 return false;
             }
-        });
+        });*/
+
+
 
         videoList.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
 
             public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
-                File file = new File(videoInfos.get(position).getUrl());
-                file.delete();
-                getActivity().getContentResolver().delete(videoInfos.get(position).getUri(), null, null);
-                mAdapter.remove(mAdapter.getItem(position));
-                Toast.makeText(getActivity(), "Thành công", Toast.LENGTH_SHORT).show();
-                return false;
+                final File file = new File(videoInfos.get(position).getUrl());
+                new AlertDialog.Builder(getContext()).setIcon(android.R.drawable.ic_dialog_alert).setTitle("Delete")
+                        .setMessage("Are you sure you want to delete this file?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                file.delete();
+                                getActivity().getContentResolver().delete(videoInfos.get(position).getUri(), null, null);
+                                mAdapter.remove(mAdapter.getItem(position));
+                                Toast.makeText(getActivity(), "Successfully Deleted", Toast.LENGTH_SHORT).show();
+                            }
+                        }).setNegativeButton("No", null).show();
+
+                return true;
             }
         });
 
